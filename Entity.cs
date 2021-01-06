@@ -16,7 +16,7 @@ namespace Timber
 
         }
 
-        public virtual void Update(GameTime dt)
+        public virtual void Update(GameTime gameTime)
         {
 
         }
