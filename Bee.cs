@@ -8,16 +8,17 @@ namespace Timber
     {
         private Random rand = new Random();
         private bool isActive = false;
-        private float speed = 0;
+        private int speed = 0;
 
-        public override void Update(GameTime dt)
+        public override void Update(GameTime gameTime)
         {
             if(isActive)
             {
-                MoveBee(dt);
+                MoveBee(gameTime);
             }
             else
             {
+                // Wait for 3 seconds before resetting the bee.
                 Task.Delay(3000).ContinueWith(t => ResetBee());
             }
         }
@@ -25,7 +26,7 @@ namespace Timber
         private void ResetBee()
         {
             // Generate random speed
-            speed = (float)((rand.NextDouble() % 0.15) + 0.15);
+            speed = rand.Next(75, 200);
 
             // Generate random height
             float height = rand.Next(501);
@@ -34,9 +35,11 @@ namespace Timber
             isActive = true;
         }
 
-        private void MoveBee(GameTime dt)
+        private void MoveBee(GameTime gameTime)
         {
-            Vector2 position = new Vector2(this.position.X - (speed * (float)dt.TotalGameTime.TotalSeconds), this.position.Y);
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            Vector2 position = new Vector2(this.position.X - (speed * delta), this.position.Y);
             this.position = position;
 
             if(this.position.X < -100)
