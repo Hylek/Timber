@@ -6,26 +6,37 @@ namespace Timber
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+
+        private Entity background = new Entity();
+        private Entity tree = new Entity();
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            // Set default window size.
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
         }
 
         protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
+        { 
+            background.position = new Vector2(0, 0);
+            tree.position = new Vector2(800, 0);
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            background.texture = Content.Load<Texture2D>("background");
+            tree.texture = Content.Load<Texture2D>("tree");
 
             // TODO: use this.Content to load your game content here
         }
@@ -44,7 +55,12 @@ namespace Timber
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            background.Draw(spriteBatch);
+            tree.Draw(spriteBatch);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
