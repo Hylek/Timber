@@ -8,6 +8,8 @@ namespace Timber
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+        private bool isPaused = false;
+        private int score = 0;
 
         private Entity background = new Entity();
         private Entity tree = new Entity();
@@ -16,6 +18,8 @@ namespace Timber
         private Cloud cloud1 = new Cloud();
         private Cloud cloud2 = new Cloud();
         private Cloud cloud3 = new Cloud();
+
+        private Text scoreText = new Text();
 
         public Game1()
         {
@@ -36,6 +40,8 @@ namespace Timber
             cloud1.position = new Vector2(-2000, 0);
             cloud2.position = new Vector2(-2000, 0);
             cloud3.position = new Vector2(-2000, 0);
+            scoreText.position = new Vector2(500, 400);
+            scoreText.textValue = "Hello, World!";
 
             base.Initialize();
         }
@@ -53,6 +59,8 @@ namespace Timber
             cloud2.texture = cloudTexture;
             cloud3.texture = cloudTexture;
 
+            scoreText.font = Content.Load<SpriteFont>("Arial");
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -61,13 +69,20 @@ namespace Timber
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            bee.Update(gameTime);
-            cloud1.Update(gameTime);
-            cloud2.Update(gameTime);
-            cloud3.Update(gameTime);
+            if(Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                isPaused = !isPaused;
+            }
 
-            base.Update(gameTime);
+            if(!isPaused)
+            {
+                bee.Update(gameTime);
+                cloud1.Update(gameTime);
+                cloud2.Update(gameTime);
+                cloud3.Update(gameTime);
+
+                base.Update(gameTime);
+            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -84,6 +99,8 @@ namespace Timber
 
             tree.Draw(spriteBatch);
             bee.Draw(spriteBatch);
+
+            scoreText.Draw(spriteBatch);
 
             spriteBatch.End();
 

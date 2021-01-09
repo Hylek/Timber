@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-// Essentially the same as the Bee class, consider refactor.
+// Essentially the same as the Bee class, I should consider refactor.
 
 namespace Timber
 {
@@ -30,7 +30,7 @@ namespace Timber
             speed = rand.Next(50, 125);
 
             float height = rand.Next(0, 300);
-            position = new Vector2(-500, height);
+            position = new Vector2(rand.Next(-1000, -500), height);
         }
 
         private void MoveCloud(GameTime gameTime)
