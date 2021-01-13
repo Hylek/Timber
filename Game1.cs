@@ -20,6 +20,10 @@ namespace Timber
         private Cloud cloud3 = new Cloud();
 
         private Text scoreText = new Text();
+        private Text startText = new Text();
+
+        private KeyboardState currentState;
+        private KeyboardState previousState;
 
         public Game1()
         {
@@ -37,11 +41,18 @@ namespace Timber
             background.position = new Vector2(0, 0);
             tree.position = new Vector2(800, 0);
             bee.position = new Vector2(2000, 0);
+
             cloud1.position = new Vector2(-2000, 0);
             cloud2.position = new Vector2(-2000, 0);
             cloud3.position = new Vector2(-2000, 0);
-            scoreText.position = new Vector2(500, 400);
-            scoreText.textValue = "Hello, World!";
+
+            scoreText.position = new Vector2(100, 15);
+            scoreText.textValue = "Score: 0";
+
+            startText.textValue = "Press Enter to Start!";
+
+            // Needs a way of acquring the length of the string to offset the top left coord system.
+            startText.position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 380, graphics.PreferredBackBufferHeight / 2);
 
             base.Initialize();
         }
@@ -59,29 +70,35 @@ namespace Timber
             cloud2.texture = cloudTexture;
             cloud3.texture = cloudTexture;
 
-            scoreText.font = Content.Load<SpriteFont>("Arial");
-
-            // TODO: use this.Content to load your game content here
+            SpriteFont arial = Content.Load<SpriteFont>("Arial");
+            scoreText.font = arial;
+            startText.font = arial;
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            ProcessInput();
 
-            if(Keyboard.GetState().IsKeyDown(Keys.Enter))
+            if (isPaused) return;
+
+            bee.Update(gameTime);
+            cloud1.Update(gameTime);
+            cloud2.Update(gameTime);
+            cloud3.Update(gameTime);
+
+            base.Update(gameTime);
+        }
+
+        private void ProcessInput()
+        {
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+
+            if (currentState.IsKeyDown(Keys.Escape)) Exit();
+
+            if(!currentState.IsKeyDown(Keys.P) && previousState.IsKeyDown(Keys.P))
             {
                 isPaused = !isPaused;
-            }
-
-            if(!isPaused)
-            {
-                bee.Update(gameTime);
-                cloud1.Update(gameTime);
-                cloud2.Update(gameTime);
-                cloud3.Update(gameTime);
-
-                base.Update(gameTime);
             }
         }
 
@@ -100,7 +117,8 @@ namespace Timber
             tree.Draw(spriteBatch);
             bee.Draw(spriteBatch);
 
-            scoreText.Draw(spriteBatch);
+            scoreText.Draw(spriteBatch, Color.White);
+            startText.Draw(spriteBatch, Color.White);
 
             spriteBatch.End();
 

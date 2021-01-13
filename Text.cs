@@ -9,9 +9,9 @@ namespace Timber
         public string textValue { get; set; }
         public Vector2 position { get; set; }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Color color)
         {
-            spriteBatch.DrawString(font, textValue, position, Color.Black);
+            spriteBatch.DrawString(font, textValue, position, color);
         }
     }
 }
