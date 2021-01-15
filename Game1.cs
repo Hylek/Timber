@@ -15,9 +15,7 @@ namespace Timber
         private Entity tree = new Entity();
         private Bee bee = new Bee();
 
-        private Cloud cloud1 = new Cloud();
-        private Cloud cloud2 = new Cloud();
-        private Cloud cloud3 = new Cloud();
+        private Cloud[] clouds = new Cloud[3];
 
         private Text scoreText = new Text();
         private Text startText = new Text();
@@ -42,9 +40,11 @@ namespace Timber
             tree.position = new Vector2(800, 0);
             bee.position = new Vector2(2000, 0);
 
-            cloud1.position = new Vector2(-2000, 0);
-            cloud2.position = new Vector2(-2000, 0);
-            cloud3.position = new Vector2(-2000, 0);
+            for(int i = 0; i < clouds.Length; i++)
+            {
+                clouds[i] = new Cloud();
+                clouds[i].position = new Vector2(-2000, 0);
+            }
 
             scoreText.position = new Vector2(100, 15);
             scoreText.textValue = "Score: 0";
@@ -66,9 +66,10 @@ namespace Timber
             bee.texture = Content.Load<Texture2D>("bee");
 
             Texture2D cloudTexture = Content.Load<Texture2D>("cloud");
-            cloud1.texture = cloudTexture;
-            cloud2.texture = cloudTexture;
-            cloud3.texture = cloudTexture;
+            for (int i = 0; i < clouds.Length; i++)
+            {
+                clouds[i].texture = cloudTexture;
+            }
 
             SpriteFont arial = Content.Load<SpriteFont>("Arial");
             scoreText.font = arial;
@@ -82,9 +83,11 @@ namespace Timber
             if (isPaused) return;
 
             bee.Update(gameTime);
-            cloud1.Update(gameTime);
-            cloud2.Update(gameTime);
-            cloud3.Update(gameTime);
+
+            for (int i = 0; i < clouds.Length; i++)
+            {
+                clouds[i].Update(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -110,9 +113,10 @@ namespace Timber
 
             background.Draw(spriteBatch);
 
-            cloud1.Draw(spriteBatch);
-            cloud2.Draw(spriteBatch);
-            cloud3.Draw(spriteBatch);
+            for (int i = 0; i < clouds.Length; i++)
+            {
+                clouds[i].Draw(spriteBatch);
+            }
 
             tree.Draw(spriteBatch);
             bee.Draw(spriteBatch);
