@@ -9,7 +9,9 @@ namespace Timber
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private bool isPaused = false;
+        private bool hasStarted = false;
         private int score = 0;
+        private int time = 0;
 
         private Entity background = new Entity();
         private Entity tree = new Entity();
@@ -19,6 +21,7 @@ namespace Timber
 
         private Text scoreText = new Text();
         private Text startText = new Text();
+        private Text timeText = new Text();
 
         private KeyboardState currentState;
         private KeyboardState previousState;
@@ -51,6 +54,9 @@ namespace Timber
 
             startText.textValue = "Press Enter to Start!";
 
+            timeText.position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 85, graphics.PreferredBackBufferHeight - 100);
+            timeText.textValue = "120";
+
             // Needs a way of acquring the length of the string to offset the top left coord system.
             startText.position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 380, graphics.PreferredBackBufferHeight / 2);
 
@@ -74,6 +80,7 @@ namespace Timber
             SpriteFont arial = Content.Load<SpriteFont>("Arial");
             scoreText.font = arial;
             startText.font = arial;
+            timeText.font = arial;
         }
 
         protected override void Update(GameTime gameTime)
@@ -89,6 +96,14 @@ namespace Timber
                 clouds[i].Update(gameTime);
             }
 
+            if(time > 0)
+            {
+                int delta = (int)gameTime.ElapsedGameTime.TotalSeconds;
+                time -= delta;
+
+                timeText.textValue = time.ToString();
+            }
+
             base.Update(gameTime);
         }
 
@@ -102,6 +117,12 @@ namespace Timber
             if(!currentState.IsKeyDown(Keys.P) && previousState.IsKeyDown(Keys.P))
             {
                 isPaused = !isPaused;
+            }
+            if(!currentState.IsKeyDown(Keys.Enter) && previousState.IsKeyDown(Keys.Enter))
+            {
+                score = 0;
+                time = 60;
+                hasStarted = true;
             }
         }
 
@@ -122,7 +143,12 @@ namespace Timber
             bee.Draw(spriteBatch);
 
             scoreText.Draw(spriteBatch, Color.White);
-            startText.Draw(spriteBatch, Color.White);
+            timeText.Draw(spriteBatch, Color.White);
+
+            if(!hasStarted)
+            {
+                startText.Draw(spriteBatch, Color.White);
+            }    
 
             spriteBatch.End();
 
